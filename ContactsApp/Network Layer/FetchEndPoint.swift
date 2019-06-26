@@ -31,7 +31,7 @@ extension FetchEndPoint {
     
     var url: URL {
         guard let url = URL(string: path) else {
-            fatalError("url can't be made right now")
+            fatalError(Constants.Errors.urlError)
         }
         return url
     }
@@ -66,13 +66,13 @@ extension FetchEndPoint {
             do {
                 return try JSONEncoder().encode(contact)
             } catch {
-                fatalError("cannot able to do encoding")
+                fatalError(Constants.Errors.deCodeError)
             }
         case .updateContact(let contact):
             do {
                 return try JSONEncoder().encode(contact)
             } catch {
-                fatalError("cannot able to do encoding")
+                fatalError(Constants.Errors.deCodeError)
             }
         }
     }

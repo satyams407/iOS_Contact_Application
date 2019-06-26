@@ -42,7 +42,7 @@ class ResponseModelTests: XCTestCase {
         contactModel = nil
     }
 
-    func testViewModelIntialisation() {
+    func testContactModelIntialisation() {
         let json: [String: Any] = [
             "id": 1,
             "first_name": "Amitabh",

@@ -18,7 +18,9 @@ enum Constants {
     
     enum Errors {
         static let phoneOrEmailInvalid = NSLocalizedString("Phone number or Email is not valid", comment: "")
-        static let allFieldsNotFilled = NSLocalizedString("Please Enter all fields", comment: "") 
+        static let allFieldsNotFilled = NSLocalizedString("Please Enter all fields", comment: "")
+        static let deCodeError =  NSLocalizedString("cannot able to do encoding", comment: "")
+        static let urlError =  NSLocalizedString("url can't be made right now", comment: "")
     }
     
     enum CellIndentifiers {

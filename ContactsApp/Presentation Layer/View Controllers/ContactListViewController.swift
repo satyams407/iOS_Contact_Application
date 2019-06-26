@@ -35,7 +35,7 @@ class ContactListViewController: UIViewController, UpdateContactDelegate, Refres
     }
     
     private func setupTableView() {
-        let nib = UINib.init(nibName: Constants.CellIndentifiers.contactListTableCell, bundle: nil)
+        let nib = UINib(nibName: Constants.CellIndentifiers.contactListTableCell, bundle: nil)
         contactListTableView?.register(nib, forCellReuseIdentifier: Constants.CellIndentifiers.contactListTableCell)
     }
     
@@ -64,6 +64,7 @@ class ContactListViewController: UIViewController, UpdateContactDelegate, Refres
             button.heightAnchor.constraint(equalToConstant: 10.0).isActive = true
             button.widthAnchor.constraint(equalToConstant: 10.0).isActive = true
             button.setTitle(Unicode.Scalar(value)?.description, for: .normal)
+            button.titleLabel?.font = UIFont(name: "HelveticaNeue-light", size: 10.0)
             button.setTitleColor(.darkGray, for: .normal)
             button.tag = Int(value)
             button.addTarget(self, action: #selector(alphabetButtonTapped(_:)), for: .allTouchEvents)
