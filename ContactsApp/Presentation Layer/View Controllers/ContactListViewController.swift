@@ -28,6 +28,10 @@ class ContactListViewController: UIViewController, UpdateContactDelegate, Refres
         alphabetsStackIntialSetup()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        contactListTableView?.reloadData()
+    }
+    
     private func screenSetup() {
         activityIndicator?.startAnimating()
         contactListTableView?.isHidden = true
@@ -62,7 +66,6 @@ class ContactListViewController: UIViewController, UpdateContactDelegate, Refres
             alphabetListStackView?.addArrangedSubview(button)
             
             button.heightAnchor.constraint(equalToConstant: 10.0).isActive = true
-            button.widthAnchor.constraint(equalToConstant: 10.0).isActive = true
             button.setTitle(Unicode.Scalar(value)?.description, for: .normal)
             button.titleLabel?.font = UIFont(name: "HelveticaNeue-light", size: 10.0)
             button.setTitleColor(.darkGray, for: .normal)
@@ -117,7 +120,7 @@ class ContactListViewController: UIViewController, UpdateContactDelegate, Refres
         let cellModel = ContactListCellModel.init(with: contact)
         contactDataSource.append(cellModel)
         sortTheContacts(in: &(contactDataSource))
-        contactListTableView?.reloadData()
+        // Can also focus on particular indexpath on which new contact is
     }
     
     func refreshContacts(with contact: ContactResponseModelElement) {
@@ -125,7 +128,6 @@ class ContactListViewController: UIViewController, UpdateContactDelegate, Refres
         let newModel = ContactListCellModel.init(with: contact)
         contactDataSource.append(newModel)
         sortTheContacts(in: &contactDataSource)
-        self.contactListTableView?.reloadData()
     }
 }
 

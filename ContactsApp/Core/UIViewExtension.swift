@@ -9,6 +9,7 @@
 import UIKit
 
 extension UIView {
+    // BUG - On ipad not working fine - didn't get time to look into it
     func applyGradientLayer(_ lightColor: UIColor, _ darkColor: UIColor) {
         let gradientLayer = CAGradientLayer()
         

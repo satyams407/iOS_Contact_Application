@@ -89,12 +89,11 @@ class UpdateContactViewController: UIViewController {
     }
     
     @IBAction func saveButtonAction(_ sender: UIButton) {
-        saveButton?.isHidden = true
-        saveActivityIndicator?.isHidden = false
-        saveActivityIndicator?.startAnimating()
+        uiChangeAfterTapOnSave(isUploading: true)
         switch currentState {
         case .create:
             guard isValidForCreateContact() else {
+                uiChangeAfterTapOnSave(isUploading: false)
                 Utility.showAlert(title: Constants.error, message: Constants.Errors.phoneOrEmailInvalid, onController: self)
                 return
             }
@@ -102,12 +101,13 @@ class UpdateContactViewController: UIViewController {
         case .update:
             guard isValidForUpdateContact(), (self.id != nil) else {
                 Utility.showAlert(title: Constants.error, message: Constants.Errors.phoneOrEmailInvalid, onController: self)
+                uiChangeAfterTapOnSave(isUploading: false)
                 return
             }
             updateContact()
         }
     }
-
+    
     private func createContact() {
         let attributes = ContactResponseModelElement.Attributes.init(firstName: firstName!, lastName: lastName!, profilePic: "/images/missing.png", email: email!, phoneNumber: phoneNumber!, url: nil, favorite: false)
         
@@ -119,12 +119,11 @@ class UpdateContactViewController: UIViewController {
             case .failure(let error):
                 DispatchQueue.main.async {
                     Utility.showAlert(title: Constants.error, message: error.errorMessage, onController: sself)
+                    sself.uiChangeAfterTapOnSave(isUploading: false)
                 }
             case .success(let contact):
                 DispatchQueue.main.async {
-                    sself.saveButton?.isHidden = false
-                    sself.saveActivityIndicator?.isHidden = true
-                    sself.saveActivityIndicator?.stopAnimating()
+                    sself.uiChangeAfterTapOnSave(isUploading: false)
                     sself.updateContactDelegate?.updateContact(with: contact)
                     sself.dismiss(animated: true, completion: nil)
                 }
@@ -136,36 +135,43 @@ class UpdateContactViewController: UIViewController {
         
         let attributes = ContactResponseModelElement.Attributes.init(firstName: firstNameTextField?.text ?? "", lastName: lastNameTextField?.text ?? "", profilePic: "/images/missing.png", email: emailTextField?.text ?? "", phoneNumber: (mobileTextField?.text)!, url: nil, favorite: false)
         let updateContactModel = ContactUpdateModel.init(id: id!, model: attributes)
-    
+        
         fetchContactService.createOrUpdateContact(with: .updateContact(model: updateContactModel), completionHandler: { [weak self] result in
             guard let sself = self else { return }
             switch result {
             case .failure(let error):
                 DispatchQueue.main.async {
+                    sself.uiChangeAfterTapOnSave(isUploading: false)
                     Utility.showAlert(title: Constants.error, message: error.errorMessage, onController: sself)
                 }
             case .success(let contact):
                 DispatchQueue.main.async {
-                    sself.saveButton?.isHidden = false
-                    sself.saveActivityIndicator?.isHidden = true
-                    sself.saveActivityIndicator?.stopAnimating()
+                    sself.uiChangeAfterTapOnSave(isUploading: false)
                     sself.updateContactDelegate?.updateContact(with: contact)
                     sself.dismiss(animated: true, completion: nil)
                 }
             }
         })
     }
+    
+    private func uiChangeAfterTapOnSave(isUploading :Bool) {
+        if isUploading {
+            saveButton?.isHidden = true
+            saveActivityIndicator?.isHidden = false
+            saveActivityIndicator?.startAnimating()
+        } else {
+            saveButton?.isHidden = false
+            saveActivityIndicator?.isHidden = true
+            saveActivityIndicator?.stopAnimating()
+        }
+    }
 }
 
-
+// MARK: Text field delegates methods and other handling
 extension UpdateContactViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.resignFirstResponder()
     }
     
     @objc func firstNameTextFieldChanged(textField: UITextField) {
@@ -183,18 +189,23 @@ extension UpdateContactViewController: UITextFieldDelegate {
     @objc func phoneNumberTextFieldChanged(textField: UITextField) {
         phoneNumber = textField.text
     }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.resignFirstResponder()
+    }
 }
 
 // MARK: Keyboard handling
 extension UpdateContactViewController {
+    // This logic can be improved
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue, !isTextEditing {
-           
+            
             let height = view.frame.height - (emailTextField?.superview?.superview?.frame.origin.y ?? 0)
             if height > keyboardSize.height {
                 UIView.animate(withDuration: 0.3, animations: {
-                     self.view.frame.origin.y -= keyboardSize.height
-                     self.isTextEditing = true
+                    self.view.frame.origin.y -= keyboardSize.height
+                    self.isTextEditing = true
                 })
             }
         }
