@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct UpdateAndEditViewModel {
+struct UpdateAndEditViewModel: ViewModelProtocols  {
     
     func isValidPhoneNumber(_ number: String) -> Bool {
         return number.count == 10

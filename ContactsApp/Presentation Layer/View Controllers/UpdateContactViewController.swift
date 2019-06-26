@@ -23,6 +23,7 @@ class UpdateContactViewController: UIViewController {
     
     @IBOutlet weak var cancelButton: UIButton?
     @IBOutlet weak var saveButton: UIButton?
+    @IBOutlet weak var saveActivityIndicator: UIActivityIndicatorView?
     
     weak var updateContactDelegate: UpdateContactDelegate?
     
@@ -30,7 +31,9 @@ class UpdateContactViewController: UIViewController {
     let fetchContactService = FetchContactService()
     let viewModel = UpdateAndEditViewModel()
     
-    var firstName, lastName, email, phoneNumber: String?
+    var firstName, lastName, email, phoneNumber, createdAt: String?
+    var id: Int?
+    var isTextEditing = false
     
     enum State {
         case create
@@ -57,8 +60,9 @@ class UpdateContactViewController: UIViewController {
     }
     
     private func screenSetup() {
-        //let darkGradientColor =
-       // headerView?.applyGradientLayer(.white, darkGradientColor)
+        let darkGradientColor = Constants.Colors.darkGraident
+        headerView?.applyGradientLayer(.white, darkGradientColor)
+        saveActivityIndicator?.isHidden = true
     }
     
     private func textFieldsSetup() {
@@ -85,6 +89,9 @@ class UpdateContactViewController: UIViewController {
     }
     
     @IBAction func saveButtonAction(_ sender: UIButton) {
+        saveButton?.isHidden = true
+        saveActivityIndicator?.isHidden = false
+        saveActivityIndicator?.startAnimating()
         switch currentState {
         case .create:
             guard isValidForCreateContact() else {
@@ -93,7 +100,7 @@ class UpdateContactViewController: UIViewController {
             }
             createContact()
         case .update:
-            guard isValidForUpdateContact() else {
+            guard isValidForUpdateContact(), (self.id != nil) else {
                 Utility.showAlert(title: Constants.error, message: Constants.Errors.phoneOrEmailInvalid, onController: self)
                 return
             }
@@ -115,6 +122,9 @@ class UpdateContactViewController: UIViewController {
                 }
             case .success(let contact):
                 DispatchQueue.main.async {
+                    sself.saveButton?.isHidden = false
+                    sself.saveActivityIndicator?.isHidden = true
+                    sself.saveActivityIndicator?.stopAnimating()
                     sself.updateContactDelegate?.updateContact(with: contact)
                     sself.dismiss(animated: true, completion: nil)
                 }
@@ -124,11 +134,26 @@ class UpdateContactViewController: UIViewController {
     
     private func updateContact() {
         
-        let attributes = ContactResponseModelElement.Attributes.init(firstName: (firstNameTextField?.text)!, lastName: (lastNameTextField?.text)!, profilePic: "/images/missing.png", email: (emailTextField?.text)!, phoneNumber: (mobileTextField?.text)!, url: nil, favorite: false)
-        //let newContact = ContactResponseModelElement.init(model: attributes, id: ContactResponseModelElement.id, createdAt: nil, updatedAt: nil)
-       // let updateModel =
-        
-      // ContactResponseModelElement.init(model: attributes, id: ContactResponseModelElement.id, createdAt: nil, updatedAt: nil)
+        let attributes = ContactResponseModelElement.Attributes.init(firstName: firstNameTextField?.text ?? "", lastName: lastNameTextField?.text ?? "", profilePic: "/images/missing.png", email: emailTextField?.text ?? "", phoneNumber: (mobileTextField?.text)!, url: nil, favorite: false)
+        let updateContactModel = ContactUpdateModel.init(id: id!, model: attributes)
+    
+        fetchContactService.createOrUpdateContact(with: .updateContact(model: updateContactModel), completionHandler: { [weak self] result in
+            guard let sself = self else { return }
+            switch result {
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    Utility.showAlert(title: Constants.error, message: error.errorMessage, onController: sself)
+                }
+            case .success(let contact):
+                DispatchQueue.main.async {
+                    sself.saveButton?.isHidden = false
+                    sself.saveActivityIndicator?.isHidden = true
+                    sself.saveActivityIndicator?.stopAnimating()
+                    sself.updateContactDelegate?.updateContact(with: contact)
+                    sself.dismiss(animated: true, completion: nil)
+                }
+            }
+        })
     }
 }
 
@@ -137,6 +162,10 @@ extension UpdateContactViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.resignFirstResponder()
     }
     
     @objc func firstNameTextFieldChanged(textField: UITextField) {
@@ -159,18 +188,20 @@ extension UpdateContactViewController: UITextFieldDelegate {
 // MARK: Keyboard handling
 extension UpdateContactViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            let height = view.frame.height - (mobileTextField?.frame.origin.y ?? 0)
-            
-            if height < keyboardSize.height {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue, !isTextEditing {
+           
+            let height = view.frame.height - (emailTextField?.superview?.superview?.frame.origin.y ?? 0)
+            if height > keyboardSize.height {
                 UIView.animate(withDuration: 0.3, animations: {
                      self.view.frame.origin.y -= keyboardSize.height
+                     self.isTextEditing = true
                 })
             }
         }
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
+        isTextEditing = false
         if self.view.frame.origin.y != 0 {
             self.view.frame.origin.y = 0
         }
@@ -184,7 +215,7 @@ extension UpdateContactViewController {
             let _ = lastName,
             let email = email,
             let phoneNumber = phoneNumber else {
-                Utility.showAlert(message: "Please Enter all fields", onController: self)
+                Utility.showAlert(message: Constants.Errors.allFieldsNotFilled, onController: self)
                 return false
         }
         return viewModel.isValidEmailAddress(email) &&  viewModel.isValidPhoneNumber(phoneNumber)
@@ -195,7 +226,7 @@ extension UpdateContactViewController {
             let lastName = lastNameTextField?.text, !lastName.isEmpty,
             let email = emailTextField?.text, !email.isEmpty,
             let mobile = mobileTextField?.text, !mobile.isEmpty else {
-                Utility.showAlert(message: "Please Enter all fields", onController: self)
+                Utility.showAlert(message: Constants.Errors.allFieldsNotFilled, onController: self)
                 return false
         }
         

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class NetworkRequest {
+final class NetworkRequest {
     static let sharedInstance = NetworkRequest()
     private init() {}
     

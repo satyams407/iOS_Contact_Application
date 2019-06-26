@@ -12,6 +12,10 @@
 		510D6BD722C2341300F87FC0 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D6BD622C2341300F87FC0 /* UIViewExtension.swift */; };
 		510D6BD922C2467600F87FC0 /* UpdateAndEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D6BD822C2467600F87FC0 /* UpdateAndEditViewModel.swift */; };
 		510D6BDF22C3439600F87FC0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D6BDE22C3439600F87FC0 /* Constants.swift */; };
+		510D6BE122C36E9C00F87FC0 /* ResponseModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D6BE022C36E9C00F87FC0 /* ResponseModelTests.swift */; };
+		510D6BE322C370BF00F87FC0 /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D6BE222C370BF00F87FC0 /* ViewModelTests.swift */; };
+		510D6BE522C3712200F87FC0 /* ViewModelProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D6BE422C3712200F87FC0 /* ViewModelProtocols.swift */; };
+		510D6BE722C3736600F87FC0 /* NetworkLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510D6BE622C3736600F87FC0 /* NetworkLayerTests.swift */; };
 		51A4C90422BF5F3000E8F0EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A4C90322BF5F3000E8F0EC /* AppDelegate.swift */; };
 		51A4C90922BF5F3000E8F0EC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51A4C90722BF5F3000E8F0EC /* Main.storyboard */; };
 		51A4C90B22BF5F3100E8F0EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51A4C90A22BF5F3100E8F0EC /* Assets.xcassets */; };
@@ -50,6 +54,10 @@
 		510D6BD622C2341300F87FC0 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		510D6BD822C2467600F87FC0 /* UpdateAndEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateAndEditViewModel.swift; sourceTree = "<group>"; };
 		510D6BDE22C3439600F87FC0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		510D6BE022C36E9C00F87FC0 /* ResponseModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseModelTests.swift; sourceTree = "<group>"; };
+		510D6BE222C370BF00F87FC0 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
+		510D6BE422C3712200F87FC0 /* ViewModelProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelProtocols.swift; sourceTree = "<group>"; };
+		510D6BE622C3736600F87FC0 /* NetworkLayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLayerTests.swift; sourceTree = "<group>"; };
 		51A4C90022BF5F3000E8F0EC /* ContactsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		51A4C90322BF5F3000E8F0EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		51A4C90822BF5F3000E8F0EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -138,6 +146,9 @@
 			children = (
 				51A4C91822BF5F3200E8F0EC /* ContactsAppTests.swift */,
 				51A4C91A22BF5F3200E8F0EC /* Info.plist */,
+				510D6BE022C36E9C00F87FC0 /* ResponseModelTests.swift */,
+				510D6BE222C370BF00F87FC0 /* ViewModelTests.swift */,
+				510D6BE622C3736600F87FC0 /* NetworkLayerTests.swift */,
 			);
 			path = ContactsAppTests;
 			sourceTree = "<group>";
@@ -200,6 +211,7 @@
 				51A4C94322BFC49300E8F0EC /* ContactsResponseModel.swift */,
 				51A4C93822BFC2BB00E8F0EC /* ContactListCellModel.swift */,
 				510D6BD822C2467600F87FC0 /* UpdateAndEditViewModel.swift */,
+				510D6BE422C3712200F87FC0 /* ViewModelProtocols.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -235,7 +247,6 @@
 				51A4C8FC22BF5F3000E8F0EC /* Sources */,
 				51A4C8FD22BF5F3000E8F0EC /* Frameworks */,
 				51A4C8FE22BF5F3000E8F0EC /* Resources */,
-				598E1B7BAC96C7E14A01DBA9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -325,28 +336,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		598E1B7BAC96C7E14A01DBA9 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ContactsApp/Pods-ContactsApp-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ContactsApp/Pods-ContactsApp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		AF7FE349370354D326EE1A98 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -404,6 +393,7 @@
 				51A4C94022BFC44800E8F0EC /* FetchContactsService.swift in Sources */,
 				51A4C93C22BFC39A00E8F0EC /* FetchContactsServiceProtocol.swift in Sources */,
 				51A4C94222BFC47700E8F0EC /* NetworkRequest.swift in Sources */,
+				510D6BE522C3712200F87FC0 /* ViewModelProtocols.swift in Sources */,
 				51A4C94F22BFC71900E8F0EC /* ApiError.swift in Sources */,
 				51A4C90422BF5F3000E8F0EC /* AppDelegate.swift in Sources */,
 				51A4C92522BF7A9800E8F0EC /* ContactTableCell.swift in Sources */,
@@ -422,7 +412,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				510D6BE722C3736600F87FC0 /* NetworkLayerTests.swift in Sources */,
+				510D6BE122C36E9C00F87FC0 /* ResponseModelTests.swift in Sources */,
 				51A4C91922BF5F3200E8F0EC /* ContactsAppTests.swift in Sources */,
+				510D6BE322C370BF00F87FC0 /* ViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

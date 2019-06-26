@@ -9,7 +9,8 @@
 import UIKit
 import Foundation
 
-class ContactListViewController: UIViewController, UpdateContactDelegate {
+class ContactListViewController: UIViewController, UpdateContactDelegate, RefreshContactList {
+
     @IBOutlet weak var contactListTableView: UITableView?
     @IBOutlet weak var alphabetListStackView: UIStackView?
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
@@ -60,8 +61,8 @@ class ContactListViewController: UIViewController, UpdateContactDelegate {
             button.translatesAutoresizingMaskIntoConstraints = false
             alphabetListStackView?.addArrangedSubview(button)
             
-            button.heightAnchor.constraint(equalToConstant: 15.0).isActive = true
-            button.widthAnchor.constraint(equalToConstant: 15.0).isActive = true
+            button.heightAnchor.constraint(equalToConstant: 10.0).isActive = true
+            button.widthAnchor.constraint(equalToConstant: 10.0).isActive = true
             button.setTitle(Unicode.Scalar(value)?.description, for: .normal)
             button.setTitleColor(.darkGray, for: .normal)
             button.tag = Int(value)
@@ -117,6 +118,14 @@ class ContactListViewController: UIViewController, UpdateContactDelegate {
         sortTheContacts(in: &(contactDataSource))
         contactListTableView?.reloadData()
     }
+    
+    func refreshContacts(with contact: ContactResponseModelElement) {
+        contactDataSource.removeAll(where: { $0.id == contact.id })
+        let newModel = ContactListCellModel.init(with: contact)
+        contactDataSource.append(newModel)
+        sortTheContacts(in: &contactDataSource)
+        self.contactListTableView?.reloadData()
+    }
 }
 
 extension ContactListViewController: UITableViewDataSource, UITableViewDelegate {
@@ -139,8 +148,9 @@ extension ContactListViewController: UITableViewDataSource, UITableViewDelegate 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: Constants.mainStoryBoard, bundle: nil)
         if let vc = storyboard.instantiateViewController(withIdentifier: Constants.ViewControllers.contactDetailVC) as? ContactDetailViewController {
-           vc.id = contactDataSource[indexPath.row].id
-           self.navigationController?.pushViewController(vc, animated: true)
+            vc.id = contactDataSource[indexPath.row].id
+            vc.refreshDelegate = self
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

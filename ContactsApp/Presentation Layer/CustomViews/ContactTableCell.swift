@@ -21,7 +21,8 @@ class ContactTableCell: UITableViewCell {
     func configureCell(with model: ContactListCellModel) {
         nameLabel.text = model.name
         favoriteImageView.isHidden = !model.isFavorite
-        displayPictureImageView.configureImageView(with: model.imageUrl)
+        displayPictureImageView.image = UIImage(named: "defaultDP.png")
+        displayPictureImageView.downloadFromLink(link: model.imageUrl, contentMode: .scaleAspectFit)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

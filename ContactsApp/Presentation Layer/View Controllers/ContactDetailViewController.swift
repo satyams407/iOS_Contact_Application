@@ -8,8 +8,12 @@
 
 import UIKit
 
-class ContactDetailViewController: UIViewController {
-    
+protocol RefreshContactList: class {
+    func refreshContacts(with contact: ContactResponseModelElement)
+}
+
+class ContactDetailViewController: UIViewController, UpdateContactDelegate {
+
     @IBOutlet weak var displayPictureImageView: UIImageView?
     
     @IBOutlet weak var headerView: UIView?
@@ -21,6 +25,8 @@ class ContactDetailViewController: UIViewController {
     
     @IBOutlet weak var emailDetailLabel: UILabel?
     @IBOutlet weak var emailActivityIndicator: UIActivityIndicatorView?
+    
+    weak var refreshDelegate: RefreshContactList?
     
     var contactDetailDataSource: ContactResponseModelElement?
     var id: Int?
@@ -47,20 +53,23 @@ class ContactDetailViewController: UIViewController {
         mobileActivityIndicator?.startAnimating()
     }
     
-    func configureNavigationBar() {
-       navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .edit, target: self, action: #selector(editContactButtonTapped))
+    private func configureNavigationBar() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .edit, target: self, action: #selector(editContactButtonTapped))
     }
     
     @objc func editContactButtonTapped() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let vc = storyboard.instantiateViewController(withIdentifier: "EditContactViewController") as? UpdateContactViewController {
-            vc.contactData = self.contactDetailDataSource?.model
+        let storyboard = UIStoryboard(name: Constants.mainStoryBoard, bundle: nil)
+        if let vc = storyboard.instantiateViewController(withIdentifier: Constants.ViewControllers.editContactVC) as? UpdateContactViewController {
+            vc.updateContactDelegate = self
+            vc.contactData = contactDetailDataSource?.model
+            vc.id = contactDetailDataSource?.id
+            vc.createdAt = contactDetailDataSource?.createdAt
             vc.currentState = .update
             self.present(vc, animated: true, completion: nil)
         }
     }
     
-    func fetchContactDetail() {
+    private func fetchContactDetail() {
         guard let id = self.id else { return }
         
         fetchService.fetchContact(with: .fetchContact(id: id), completionHandler: {
@@ -82,16 +91,21 @@ class ContactDetailViewController: UIViewController {
         })
     }
     
-    func configureContactDetail(from contact: ContactResponseModelElement) {
+    private func configureContactDetail(from contact: ContactResponseModelElement) {
         mobileDetailLabel?.text = contact.model.phoneNumber
         emailDetailLabel?.text = contact.model.email
         fullNameLabel?.text = contact.model.fullName
-        displayPictureImageView?.configureImageView(with: contact.model.profilePic)
-        
+        displayPictureImageView?.downloadFromLink(link: contact.model.profilePic, contentMode: .scaleAspectFit)
         if contact.model.favorite {
-            favoriteImageView?.image = UIImage.init(named: "favorite")
+            favoriteImageView?.image = UIImage(named: "favorite")
         } else {
-            favoriteImageView?.image = UIImage.init(named: "nonFavorite")
+            favoriteImageView?.image = UIImage(named: "nonFavorite")
         }
+    }
+    
+    func updateContact(with contact: ContactResponseModelElement) {
+        refreshDelegate?.refreshContacts(with: contact)
+        contactDetailDataSource = contact
+        configureContactDetail(from: contact)
     }
 }
