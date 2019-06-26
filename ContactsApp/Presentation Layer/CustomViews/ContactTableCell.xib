@@ -22,7 +22,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4k4-T0-dhn">
                         <rect key="frame" x="0.0" y="0.0" width="332" height="71.5"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ylQ-II-oq7">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultDP" translatesAutoresizingMaskIntoConstraints="NO" id="ylQ-II-oq7">
                                 <rect key="frame" x="16" y="12" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="r4V-PS-SBb"/>
@@ -45,6 +45,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="5aC-Xe-7PH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Oen-sz-eLf" secondAttribute="trailing" constant="10" id="IrR-j7-ZFw"/>
                             <constraint firstItem="ylQ-II-oq7" firstAttribute="leading" secondItem="4k4-T0-dhn" secondAttribute="leading" constant="16" id="MfG-Zb-F8R"/>
                             <constraint firstAttribute="trailing" secondItem="5aC-Xe-7PH" secondAttribute="trailing" constant="32" id="Pbd-C4-GRy"/>
                             <constraint firstItem="ylQ-II-oq7" firstAttribute="top" secondItem="4k4-T0-dhn" secondAttribute="top" constant="12" id="T6K-k0-dqw"/>
@@ -71,6 +72,7 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="defaultDP" width="126" height="126"/>
         <image name="favorite" width="19" height="18"/>
     </resources>
 </document>

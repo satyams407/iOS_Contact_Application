@@ -9,13 +9,14 @@
 import Foundation
 
 struct ContactListCellModel {
-    let imageUrl: String
-    let name: String
+    let imageUrl, name: String
     let isFavorite: Bool
+    let id: Int
     
-    init(with model: ContactResponseModelElement) {
-        self.name = model.fullName
-        self.imageUrl = model.profilePic
-        self.isFavorite = model.favorite
+    init(with contact: ContactResponseModelElement) {
+        self.name = contact.model.fullName
+        self.imageUrl = contact.model.profilePic
+        self.isFavorite = contact.model.favorite
+        self.id = contact.id
     }
 }
